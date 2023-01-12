@@ -36,3 +36,39 @@ class Layer:
         self.B -= alpha * self.dB
         self.dW.fill(0)
         self.dB.fill(0)
+
+if __name__ == "__main__":
+
+    def loss(Out, Y):
+        return (
+            np.sum(np.square(Out-Y))/len(Out),
+            np.multiply(2.0,(Out-Y))
+        )
+
+    layer = Layer(3,1)
+    for i in range(500):
+
+        iterLoss = 0
+    
+        out = layer.forward(np.array([0,0,0]))
+        (l,delta) = loss(out, 1)
+        iterLoss += l
+        layer.backward(delta)
+
+        out = layer.forward(np.array([0,1,0]))
+        (l,delta) = loss(out, 1)
+        iterLoss += l
+        layer.backward(delta)
+
+        out = layer.forward(np.array([1,0,1]))
+        (l,delta) = loss(out, 0)
+        iterLoss += l
+        layer.backward(delta)
+
+        if i % 20 ==0:
+            print(iterLoss)
+        layer.update(0.05)
+
+    print(layer.fire(np.array([0,0,0])))
+    print(layer.fire(np.array([0,1,0])))
+    print(layer.fire(np.array([1,0,1])))
