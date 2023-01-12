@@ -12,6 +12,18 @@ class NeuralNetwork:
 
         self.Layers = self._build_layers(dimension)
 
+    def fire(self, Input):
+        output = Input
+        for layer in self.Layers:
+            output = layer.fire(output)
+        return output
+
+    def forward(self, Input):
+        output = Input
+        for layer in self.Layers:
+            output = layer.forward(output)
+        return output 
+
     def _build_layers(self, dimesion) -> list:
         result = []
         for i in range(len(dimesion)-1):
