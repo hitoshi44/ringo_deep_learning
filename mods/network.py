@@ -1,6 +1,13 @@
 import numpy as np
 from layer import Layer
 
+def mse_loss(O, Y):
+    n = len(O)
+    return (
+        np.sum(np.square(O-Y)) /n, # loss
+        np.multiply(2.0,(O-Y)) /n, # delta
+    )
+
 class NeuralNetwork:
     def __init__(self,
         dimension, # int の タプル
@@ -11,6 +18,7 @@ class NeuralNetwork:
         self.loss_function = loss_function
 
         self.Layers = self._build_layers(dimension)
+        self.Loss = .0
 
     def fire(self, Input):
         output = Input
@@ -23,6 +31,11 @@ class NeuralNetwork:
         for layer in self.Layers:
             output = layer.forward(output)
         return output 
+
+    def calc_loss(self, O, Y):
+        (loss, delta) = self.loss_function(O, Y)
+        self.Loss += loss
+        return delta
 
     def _build_layers(self, dimesion) -> list:
         result = []
