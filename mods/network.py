@@ -1,5 +1,5 @@
 import numpy as np
-from layer import Layer
+from mods.layer import Layer
 
 def mse_loss(O, Y):
     n = len(O)
@@ -31,6 +31,17 @@ class NeuralNetwork:
         for layer in self.Layers:
             output = layer.forward(output)
         return output 
+
+    def backward(self, Delta):
+        delta = Delta
+        for layer in reversed(self.Layers):
+            delta = layer.backward(delta)
+        return delta
+        
+    def update(self, alpha):
+        for layer in self.Layers:
+            layer.update(alpha)
+        self.Loss = .0
 
     def calc_loss(self, O, Y):
         (loss, delta) = self.loss_function(O, Y)
