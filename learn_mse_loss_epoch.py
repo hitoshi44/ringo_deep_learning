@@ -4,9 +4,13 @@ from mods import mnist, network
 (images, labels) = mnist.np_load_train()
 NN = network.NeuralNetwork((784,100,10), network.mse_loss)
 
-epoch = range(5)
 
-for e in epoch:
+alpha = 0.56
+e = 0
+while True:
+    alpha /= 2.0
+    if alpha < 0.01:
+        break
     label = np.zeros(10)
     i = 0
     size = len(images)
@@ -20,7 +24,7 @@ for e in epoch:
             NN.backward( delta )
             i+=1
         
-        NN.update(0.01)
+        NN.update(alpha)
 
     (tests, labels) = mnist.np_load_train()
     hit = 0
@@ -28,7 +32,7 @@ for e in epoch:
         pred = np.argmax(NN.fire(image))
         if pred == label:
             hit += 1
-    
-    print("At epoch ", e+1)
+    e+=1
+    print("At epoch:", e, " alpha:", alpha)
     print("Accuracy :", hit/len(tests))
     print("  ", hit, " / ", len(tests))
